@@ -6,7 +6,7 @@ Firstly, install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing
 Then, run these commands
 
 ```bash
-$ git clone https://github.com/akhilnarang/scripts
+$ git clone https://github.com/schwabe93/scripts
 $ cd scripts
 $ bash setup/<name of script>
 ```
