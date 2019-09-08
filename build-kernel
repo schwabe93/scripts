@@ -20,10 +20,10 @@ fi
 function tg() {
     case "${DEVICE}" in
         "whyred")
-            sendDerpWhyred "${@:?}"
+            sendKernelWhyred "${@:?}"
         ;;
         "beryllium")
-            sendDerpBeryllium "${@:?}"
+            sendKernelBeryllium "${@:?}"
         ;;
     esac
 }
@@ -78,7 +78,7 @@ if [[ ! -d "${ANYKERNEL}" ]]; then
 fi
 
 if [[ -z "${NAME}" ]]; then
-    export NAME="derp"
+    export NAME="Illusion"
 fi
 NAME="${NAME}-${DEVICE}-$(date +%Y%m%d-%H%M)"
 export NAME
@@ -142,7 +142,18 @@ if [[ "$*" =~ "transfer" ]]; then
 fi
 if [[ "$*" =~ "upload" ]]; then
     echo -e "Uploading ${ZIPNAME}"
-    rsync -av --progress --delete "${ZIP_DIR}"/* akhil@178.63.101.252:/var/www/downloads.akhilnarang.me/kernel/${DEVICE}/Test/
+    case $(hostname) in
+    "memebox")
+        rsync -av --progress --delete "${ZIP_DIR}"/* ~/mirror/kernel/${DEVICE}/Test/
+    ;;
+    "TheLab")
+        rsync -av --progress --delete "${ZIP_DIR}"/* /var/www/downloads.akhilnarang.me/kernel/${DEVICE}/Test/
+    ;;
+    *)
+        rsync -av --progress --delete "${ZIP_DIR}"/* akhil@ssh.packet.resurrectionremix.com:mirror/kernel/${DEVICE}/Test/
+    ;;
+    esac
+    mirrorsync
     tg "Download ${ZIPNAME/\.zip/} from [here](${DOWNLOAD_BASE_URL}/${ZIPNAME})"
 fi
 else

@@ -75,8 +75,7 @@ function run_virtualenv() {
 
 # Repo sync with various flags I'm lazy to type each time
 function syncc() {
-    time repo sync --force-broken --force-sync --no-clone-bundle \
-             --current-branch --no-tags "$@"
+    time repo sync --force-sync --no-clone-bundle --current-branch --no-tags "$@"
 }
 
 # Some git aliases for an easier workflow
@@ -174,8 +173,8 @@ function sendTG() {
 
     case "${chat}" in
         "me") CHAT_ID="92027269" ;;
-        "derpwhyred") CHAT_ID="-1001313293729" ;;
-        "derpberyllium") CHAT_ID="-1001297323361" ;;
+        "kernelwhyred") CHAT_ID="-1001313293729" ;;
+        "kernelberyllium") CHAT_ID="-1001297323361" ;;
         "aosip") CHAT_ID="-1001055786180" ;;
         *) CHAT_ID="${chat}" ;;
     esac
@@ -190,13 +189,13 @@ function sendTG() {
 }
 
 # Sends a message to my whyred kernel chat
-function sendDerpWhyred() {
-    sendTG derpwhyred "${@}"
+function sendKernelWhyred() {
+    sendTG kernelwhyred "${@}"
 }
 
 # Sends a message to my beryllium kernel chat
-function sendDerpBeryllium() {
-    sendTG derpberyllium "${@}"
+function sendKernelBeryllium() {
+    sendTG kernelberyllium "${@}"
 }
 
 # Sends a message to AOSiP Testers group
