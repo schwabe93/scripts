@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-[[ -z "${API_KEY}" ]] && echo "API_KEY not defined, exiting!" && exit 1
+[[ -z ${API_KEY} ]] && echo "API_KEY not defined, exiting!" && exit 1
 CHAT_ID="-1001185331716"
 curl -s "https://api.telegram.org/bot${API_KEY}/sendmessage" --data "text=$BUILD_URL&chat_id=$CHAT_ID&parse_mode=HTML"
 CHAT_ID="@ResurrectionRemixChannel"
@@ -22,7 +22,7 @@ for device in $(git diff HEAD@\{1\}..HEAD --name-only); do
         echo
         echo "<b>FileSize:</b> $filesize MB"
         echo "<b>SHA256:</b> <code>$sha</code>"
-    } >"${msg}"
+    } > "${msg}"
     MESSAGE=$(cat "$msg")
     curl -s "https://api.telegram.org/bot${API_KEY}/sendmessage" --data "text=$MESSAGE&chat_id=$CHAT_ID&parse_mode=HTML"
 done

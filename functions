@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2018 Akhil Narang
+# Copyright (C) 2018-19 Akhil Narang
 # SPDX-License-Identifier: GPL-3.0-only
 
 # Script defining various functions used in the scripts across this repository
 
 # shellcheck disable=SC1090,SC1091
 # SC1090: Can't follow non-constant source. Use a directive to specify location.
-# SC1091: Not following: /tmp/venv/bin/activate: openBinaryFile: does not exist (No such file or directory)
 
 source ~/scripts/aliases
 
@@ -31,29 +30,6 @@ function repopick_stuff() {
     export IFS=$oldifs
 }
 
-# Creates a virtualenv if required and activates it
-function venv() {
-    PYV=$(python -c "import sys;t='{v[0]}'.format(v=list(sys.version_info[:1]))\
-            ;sys.stdout.write(t)")
-    if [[ "${PYV}" == "3" ]]; then
-        if [[ "$(command -v 'virtualenv2')" ]]; then
-            [[ -f "/tmp/venv/bin/activate" ]] || virtualenv2 /tmp/venv
-            source /tmp/venv/bin/activate
-        else
-            echo "Please install 'virtualenv2', or make 'python' point to \
-                    python2"
-        fi
-    fi
-}
-
-# Deactivates a virtualenv and deletes the folder
-function rmvenv() {
-    if [[ -d "/tmp/venv/" ]]; then
-        deactivate
-        rm -rf /tmp/venv
-    fi
-}
-
 # Uploads a given file to transfer.sh
 function transfer() {
     file="${1}"
@@ -62,15 +38,6 @@ function transfer() {
     url=$(curl -# -T "${file}" https://transfer.sh/"${destination}")
     printf '\n'
     echo -e "Download $zipname at $url"
-}
-
-# Calls venv(), runs the given command, and then calls rmvenv()
-function run_virtualenv() {
-    venv
-
-    "$@"
-
-    [[ -d "/tmp/venv" ]] && deactivate
 }
 
 # Repo sync with various flags I'm lazy to type each time
@@ -167,31 +134,31 @@ function sendTG() {
     shift
     msg=${*:?}
     case "${bot}" in
-    "ts") BOT_API_KEY="$(cat ~/.tskey)" ;;
-    "kronic") BOT_API_KEY="$(cat ~/.kronickey)" ;;
-    "rr") BOT_API_KEY="$(cat ~/.rrkey)" ;;
-    *)
-        echo -e "Invalid bot, must be one of ts|kronic|rr!"
-        return
-        ;;
+        "ts") BOT_API_KEY="$(cat ~/.tskey)" ;;
+        "kronic") BOT_API_KEY="$(cat ~/.kronickey)" ;;
+        "rr") BOT_API_KEY="$(cat ~/.rrkey)" ;;
+        *)
+            echo -e "Invalid bot, must be one of ts|kronic|rr!"
+            return
+            ;;
     esac
 
     case "${chat}" in
-    "me") CHAT_ID="92027269" ;;
-    "kernelberyllium") CHAT_ID="-1001297323361" ;;
-    "aosip") CHAT_ID="-1001055786180" ;;
-    *) CHAT_ID="${chat}" ;;
+        "me") CHAT_ID="92027269" ;;
+        "kernelberyllium") CHAT_ID="-1001297323361" ;;
+        "aosip") CHAT_ID="-1001055786180" ;;
+        *) CHAT_ID="${chat}" ;;
     esac
 
     case "${parse_mode}" in
-    "md") parse_mode="Markdown" ;;
-    "html") parse_mode="HTML" ;;
-    *)
-        echo -e "Invalid parse mode, must be one of Markdown|HTML!"
-        return
-        ;;
+        "md") parse_mode="Markdown" ;;
+        "html") parse_mode="HTML" ;;
+        *)
+            echo -e "Invalid parse mode, must be one of Markdown|HTML!"
+            return
+            ;;
     esac
-    curl -s "https://api.telegram.org/bot${BOT_API_KEY}/sendMessage" --data "text=${msg}&chat_id=${CHAT_ID}&parse_mode=${parse_mode}" 1>/dev/null
+    curl -s "https://api.telegram.org/bot${BOT_API_KEY}/sendMessage" --data "text=${msg}&chat_id=${CHAT_ID}&parse_mode=${parse_mode}" 1> /dev/null
     echo
 }
 
@@ -215,7 +182,7 @@ function gdrivedl() {
     local CONFIRM FILE_ID URL
     URL="${1}"
     shift
-    if [[ "${URL:?}" =~ folders ]]; then
+    if [[ ${URL:?} =~ folders ]]; then
         FILE_ID="$(echo "${URL}" | sed -r -e 's/https.*folders\/(.*)/\1/' -e 's/(.*)\?usp=sharing/\1/')"
     else
         FILE_ID="$(echo "${URL:?}" | sed -r -e 's/(.*)&export.*/\1/' -e 's/https.*id=(.*)/\1/' -e 's/https.*\/d\/(.*)\/view/\1/')"
@@ -234,7 +201,7 @@ function gdriveul() {
         return
     }
     PARENT="${2}"
-    if [[ -n "${PARENT}" ]]; then
+    if [[ -n ${PARENT} ]]; then
         PARENT="-p ${PARENT}"
     fi
     ZIP_SIZE="$(du -h "${FILE}" | awk '{print $1}')"
