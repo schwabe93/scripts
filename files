@@ -7,7 +7,8 @@ aosip/crowdin.sh
 aosip/merge.sh
 aosip/push.sh
 aosip/rebase.sh
-aosip/sign-and-upload.sh
+aosip/release.sh
+aosip/sign.sh
 build-kernel
 functions
 gerrit/change-merge-type.sh
@@ -34,7 +35,9 @@ setup/ccache.sh
 setup/create_user.sh
 setup/crowdin-cli.sh
 setup/fedora.sh
+setup/git.sh
 setup/hub.sh
 setup/install_android_sdk.sh
 setup/make.sh
 setup/solus.sh
+zsh/setup.sh
